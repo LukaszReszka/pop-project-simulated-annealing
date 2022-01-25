@@ -8,10 +8,13 @@ COOLING_FUNC = Callable[[int], float]
 FLOAT_VECT = list[float]
 TUPLE_POINTS_AND_Q = tuple[list[list[float]], list[float]]
 
+GENERATION_LIMIT = 300
+
 
 class AnnealingWithTabu:
     def __init__(self, q_function: Q_FUNC, x_dimension: int, neighbor_radius: float = 1.0,
                  minimize_func: bool = True) -> None:
+        self.get_stucked = False
         self.tabu_size = None
         self.q = q_function
         self.dim = x_dimension
@@ -30,6 +33,12 @@ class AnnealingWithTabu:
 
         for iteration in range(max_iter):
             y = self._select_neighbour(x, tabu_queue)
+
+            if self.get_stucked is True:
+                points += [x] * (max_iter - iteration)
+                q_val += [self.q(x)] * (max_iter - iteration)
+                break
+
             q_y = self.q(y)
             q_x = self.q(x)
 
@@ -59,9 +68,10 @@ class AnnealingWithTabu:
 
     def _select_neighbour(self, x: FLOAT_VECT, tabu_queue: deque) -> FLOAT_VECT:
         is_point_outside_tabu = False
+        counter = 0
         y = []
 
-        while not is_point_outside_tabu:
+        while (not is_point_outside_tabu) and counter < GENERATION_LIMIT:
             y = self._select_point_from_neighborhood(x)
             is_point_outside_tabu = True
 
@@ -73,7 +83,11 @@ class AnnealingWithTabu:
 
                 if sum_to_check <= self.squared_radius:
                     is_point_outside_tabu = False
+                    counter += 1
                     break
+
+        if counter >= GENERATION_LIMIT:
+            self.get_stucked = True
 
         return y
 
