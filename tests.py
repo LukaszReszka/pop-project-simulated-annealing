@@ -86,7 +86,7 @@ def run_all(func, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, pl
     optimum_results = [optimum_result1, optimum_result2, optimum_result3, optimum_result4]
     for result in optimum_results:
         print(result)
-
+    return optimum_results
 
 
 
