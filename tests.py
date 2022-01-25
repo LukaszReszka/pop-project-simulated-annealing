@@ -57,6 +57,7 @@ def results(func, cooling_func, x_dim, t_0, param, init_min, init_max, max_iter,
             show_chart([point[0] for point in points], q_val, color='r', title=description)
         if x_dim == 2:
             show_chart([point[0] for point in points], [point[1] for point in points], color='r', title=description)
+    print("end no tabu")
 
     alg2 = at.AnnealingWithTabu(func, x_dim)
     points2, q_val2 = alg2.run_algorithm(init_min, init_max, max_iter, tabu_size, cooling_func)
@@ -69,23 +70,32 @@ def results(func, cooling_func, x_dim, t_0, param, init_min, init_max, max_iter,
             show_chart([point2[0] for point2 in points2], q_val2, color='r', title=description2)
         if x_dim == 2:
             show_chart([point2[0] for point2 in points2], [point2[1] for point2 in points2], color='r', title=description2)
+        
+    print("end tabu")
+    
 
     return [q_val[-1], q_val2[-1]]
                             
 
 
-def run_all(func, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data):
+def run_all(func, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data, logging=False):
+    if logging:
+        print(1)
     col = cs.StandardCoolingSchedule(t_0, param)
     optimum_result1 = results(func, col.standard_cooling, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data)
+    if logging:
+        print(2)
     col = cs.LinearCoolingSchedule(t_0, param)
     optimum_result2 = results(func, col.linear_cooling, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data)
+    if logging:
+        print(3)
     col = cs.GeometricCoolingSchedule(t_0, param)
     optimum_result3 = results(func, col.geometric_cooling, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data)
+    if logging:
+        print(4)
     col = cs.LogarithmicCoolingSchedule(t_0, param)
     optimum_result4 = results(func, col.logarithmic_cooling, x_dim, t_0, param, init_min, init_max, max_iter, tabu_size, plotting, show_data)
     optimum_results = [optimum_result1, optimum_result2, optimum_result3, optimum_result4]
-    for result in optimum_results:
-        print(result)
     return optimum_results
 
 
