@@ -19,7 +19,7 @@ def func3(x):
     # x^4 - 5x^2 - 3x 
     return x**4 - 5*x**2 - 3*x
 
-# two dimensional functions 
+# three dimensional functions 
 def rosenbrock_f(x):
     return (1-x[0]) ** 2 + 100*(x[1]-x[0]**2)**2
 
